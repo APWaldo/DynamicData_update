@@ -3,77 +3,81 @@
  */
 
 //Console log to make sure that I know that this works.
-console.log ("Hi there. About to make a pretty cool visualization about Syria.");
+console.log ("Hi there. About to make a pretty cool visualization about Economic Data.");
 
 
 //This function will make magic with the dataset that I pointed to in googleLoaded. Gave the function a short hand name
-//of Syria to work with.
-function dataLoaded(SYRIA) {
+//of unemployment to work with.
+function dataLoaded(UNRATE) {
 	
-	//Console log that the data has loaded just to double check. Put the name of the data SYRIA just to check.
-	console.log (SYRIA)
+	//Console log that the data has loaded just to double check. Put the name of the data UNRATE just to check.
+	console.log (UNRATE);
 	
-	//Create a loop that is a short cut straight to what we want to chart. First
-	//start by creating a variable. We want to work with results (and from that, we want to plot count.)
-	var mySyriaData = SYRIA.results;
+	var gDataTable = new google.visualization.DataTable();
 	
-	//Create an empty data array myDataArray in which to push all of my new data when I make an array of an array.
-	var mySyriaArray = [];
+	//When adding columns, the first parameter is the datatype in that column.
+	//The second parameter is the name of the column.
 	
-	//Add the headers of the dataArray so that I know what I am working with. In the case of Syria, I am working with
-	//Data and Mentions of Syria
-	var headerSyriaArray = ["Date", "Mentions of Syria"];
+	gDataTable.addColumn('string', UNRATE.columns[0]);
 	
-	//Push the headers to myDataArray. So now the first "row" so to speak will be the headers Date and Mentions of Syria.
-	mySyriaArray.push(headerSyriaArray);
+	gDataTable.addColumn('number', UNRATE.columns[1]);
 	
-	//Now I create a loop that is an ARRAY of an ARRAY so that the google visualization will be able to read my data.
-	//I have to specify the starting point, or the parameters of the for loop as well as the length of the loop and the
-	//number of times to iterate. Then I create an object to work with in the loop and set my MENTIONS.results iterated 
-	//through this loop to the new variable currObj. Then I have to go into the attributes of each result of my json, and
-	//pull out the date and the count of mentions. And then I push that to the empty (all but the headers) array I have 
-	//above. This will iterate until there are no more results in my json to go through and then it will stop.
-	for(var i=0; i<mySyriaData.length; i++) {
-		
-		//You want to get whats in the observations based on its INDEX. Created reference to current object in list.
-		var currObj = mySyriaData[i];
-
-		//Now create an array IN an array by taking each value from month and count and pushing to the array shell
-		var currArray = [currObj.month, currObj.count];
-		
-		//Pushing to the array shell above so that you're making into the larger array.
-		mySyriaArray.push(currArray);
-	}
-	//Just checing to see if myDataArray works!
-	console.log(mySyriaArray);
+	//Now that we have the headers, lets add some rows.
 	
-	//Now I feed data to visualization library. Whoot almost there!
-	var data = google.visualization.arrayToDataTable(mySyriaArray);
+	gDataTable.addRows(UNRATE.rows)
 	
 	//Create options object to add fanciness to the chart, like a title.
 	var chartOptions = {
-	title: "Mentions of Syria in U.S. Congress Between 2009-2014"
+	title: "Unemployment Since 1948"
 	};
 	
 //Now I tell it to create a line chart and give it a div that matches the index.html, meaning I should now go back and create
 //that div in my index. 
-	var mySyriaChart = new google.visualization.LineChart(document.getElementById('mySyriaChartDiv'));
+	var myUnrateChart = new google.visualization.LineChart(document.getElementById('myUnrateChartDiv'));
 //Telling it to draw it using my data and using my options! Finished! So exciting!
-mySyriaChart.draw(data, chartOptions);
+myUnrateChart.draw(gDataTable, chartOptions);
+}
+function dataLoaded2(UNRATE) {
 	
+	//Console log that the data has loaded just to double check. Put the name of the data UNRATE just to check.
+	console.log (UNRATE);
+	
+	var gDataTable = new google.visualization.DataTable();
+	
+	//When adding columns, the first parameter is the datatype in that column.
+	//The second parameter is the name of the column.
+	
+	gDataTable.addColumn('string', UNRATE.columns[0]);
+	
+	gDataTable.addColumn('number', UNRATE.columns[1]);
+	
+	//Now that we have the headers, lets add some rows.
+	
+	gDataTable.addRows(UNRATE.rows)
+	
+	//Create options object to add fanciness to the chart, like a title.
+	var chartOptions = {
+	title: "Unemployment Since 1948"
+	};
+	
+//Now I tell it to create a line chart and give it a div that matches the index.html, meaning I should now go back and create
+//that div in my index. 
+	var myUnrateChart = new google.visualization.LineChart(document.getElementById('myUnrateChartDiv2'));
+//Telling it to draw it using my data and using my options! Finished! So exciting!
+myUnrateChart.draw(gDataTable, chartOptions);
 }
 
 
-
-//Adding the googleLoaded function. This function will go and get my data and eventually display it on the page! :-)
+//Instead of adding data from a static json file, I'm going to load it from a google fusion table.
 function googleLoaded(){
 	console.log ("Google has loaded")
 	
 	//Time to load data with get function. This will tell my page to go and get this data set and use the function
 	//dataLoaded to render it. 
-	$.get("mentions_syria_09_14.json", dataLoaded, "json");
-	
+	$.get("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+*+FROM+1Wn0YcTaLlIjQz4_eKAjX2GKwKxdrtPeIcaVHlsrl+WHERE+DATE>'1979-12-01'&key=AIzaSyC_YvjF2i4ejxQorXr0ge-tvfwv4HQrQoA", dataLoaded, "json");
+	$.get("https://www.googleapis.com/fusiontables/v1/query?sql=SELECT+*+FROM+1Wn0YcTaLlIjQz4_eKAjX2GKwKxdrtPeIcaVHlsrl+WHERE+DATE>'1979-12-01'&key=AIzaSyC_YvjF2i4ejxQorXr0ge-tvfwv4HQrQoA", dataLoaded2, "json");
 
+	
 }
 
 
